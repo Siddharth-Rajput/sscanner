@@ -14,7 +14,7 @@ regex_keys = list(regex.keys())
 regex_values = list(regex.values())
 
 needed_ext = ["py","sh","bash","yaml"]
-escape_file = ["pdf","png","jpg"]
+escape_file = ["pdf","png","jpg","md"]
 
 def banner():
     print ('''
@@ -41,6 +41,7 @@ def summary(file_ext,file_fond):
     print("=============================")
 
 def folderscan(folder, permissions, quite):
+    over = False
     permissions = [int(item) for item in permissions]
     permissions.append(777)
     file_fond = []
@@ -55,12 +56,16 @@ def folderscan(folder, permissions, quite):
                 fullpath = os.path.join(currentpath, file)
                 ext = fullpath.split(".").pop()
                 mask = oct(os.stat(fullpath).st_mode)[-3:]
-                if int(mask) in permissions: file_fond.append(fullpath)
-                if ext in needed_ext: file_ext.append(fullpath)
-                
+                if int(mask) in permissions: 
+                    file_fond.append(fullpath)
+                    over = True
+                if ext in needed_ext:
+                    file_ext.append(fullpath)
+                    over = True
                 ###  CONTENT SCANNING
                 if ext in escape_file: continue
-                content = open(fullpath, "r").read()
+                    with open(fullpath, "r") as G: content = G.read()
+                #content = open(fullpath, "r").read()
                 for i in range(len(regex)):
                     exp = regex_values[i]
                     em = re.findall(exp, content)
@@ -68,10 +73,13 @@ def folderscan(folder, permissions, quite):
                         print ("Found %d %s in => %s" % (len(em), regex_keys[i], fullpath))
                         print (em)
                         print ("=================\n")
+                        over = True
+                 over = True
         if quite == False:
             summary(file_ext,file_fond)
     else:
         print ("Folder does not exist")
+    return over
 
 def parser_error(errmsg):
     #banner()
