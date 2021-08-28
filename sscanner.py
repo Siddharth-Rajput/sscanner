@@ -24,9 +24,9 @@ def banner():
     ''')
 
 def summary(file_ext,file_fond,secret_fond):
-    print("**************************")
-    print("** HERE SUMMARY OF SCAN **")
-    print("**************************")
+    print("*********************")
+    print("** SUMMARY OF SCAN **")
+    print("*********************")
     print("%d files found with given permissions\n" % (len(file_fond)))
     for files in file_fond:
         mask = oct(os.stat(files).st_mode)[-3:]
@@ -44,7 +44,6 @@ def summary(file_ext,file_fond,secret_fond):
 
 
 def folderscan(folder, permissions, quiet, repo):
-    over = False
     permissions = [int(item) for item in permissions]
     permissions.append(777)
     file_fond = []
@@ -57,22 +56,26 @@ def folderscan(folder, permissions, quiet, repo):
                 fullpath = os.path.join(currentpath, file)
                 ext = fullpath.split(".").pop()
                 mask = oct(os.stat(fullpath).st_mode)[-3:]
-                if int(mask) in permissions:  ## Scanning for permissions
+
+                ## Scanning for permissions
+                if int(mask) in permissions: 
                     file_fond.append(fullpath)
-                    over = True
+                
+                ## Scanning for extensions
                 if ext in needed_ext: 
-                    file_ext.append(fullpath)  ## Scanning for extensions
-                    over = True
+                    file_ext.append(fullpath)  
                 
                 ###  CONTENT SCANNING
-                if ext in escape_file: continue
+                if ext in escape_file: continue  ## Ignoring pdf documents
                 with open(fullpath, "r") as G:
                     content = G.read()
                 for k, v in regex.items():
                     em = re.findall(v, content)
-                    if len(em)!=0: over = True   ##  Test failed as secrets found in input
                     for i in range(len(em)): secret_fond[em[i]]=fullpath
                 G.close()
+
+        ## Returning Output for test case
+        over = "Found {} Permission error, {} File Extension, {} Secrets".format(len(file_fond), len(file_ext), len(secret_fond))
         if quiet == False:
             summary(file_ext,file_fond,secret_fond)
         if repo == "r": os.system("sudo rm -r %s" % (folder))
