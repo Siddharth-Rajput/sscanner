@@ -43,7 +43,7 @@ def summary(file_ext,file_fond,secret_fond):
     print("=============================")
 
 
-def folderscan(folder, permissions, quite, repo):
+def folderscan(folder, permissions, quiet, repo):
     over = False
     permissions = [int(item) for item in permissions]
     permissions.append(777)
@@ -73,7 +73,7 @@ def folderscan(folder, permissions, quite, repo):
                     if len(em)!=0: over = True   ##  Test failed as secrets found in input
                     for i in range(len(em)): secret_fond[em[i]]=fullpath
                 G.close()
-        if quite == False:
+        if quiet == False:
             summary(file_ext,file_fond,secret_fond)
         if repo == "r": os.system("sudo rm -r %s" % (folder))
     else:
@@ -92,23 +92,23 @@ def parse_args():
     parser.error = parser_error
     parser._optionals.title = "OPTIONS"
     parser.add_argument('-p', '--permissions', help='Scan the given permissions file only', default="777")
-    parser.add_argument('-q', '--quite', help='Scanner will run in its default configurations', default=False)
+    parser.add_argument('-q', '--quiet', help='Scanner will run in its default configurations', default=False)
     parser.add_argument('-i', '--input', help='Specify a folder name or Git repo to scan', required=True)
     return parser.parse_args()
 
 def main():
     args = parse_args()
     permissions = args.permissions.split(",")
-    quite = args.quite
+    quiet = args.quiet
     folder = args.input
     banner()
     if "git" in folder.split("."):
         com = "git clone -q " + folder
         os.system(com)
         folder = folder.split("/").pop().split(".")[0]
-        folderscan(folder, permissions, quite, "r")
+        folderscan(folder, permissions, quiet, "r")
     else:
-        folderscan(folder, permissions, quite, "f")
+        folderscan(folder, permissions, quiet, "f")
 
 if __name__ == "__main__":
     main()
