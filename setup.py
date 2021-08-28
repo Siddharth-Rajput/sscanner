@@ -1,9 +1,11 @@
 from setuptools import setup
-setup(
-	name='SecretScanner',
-	version='0.01',
+setuptools.setup(
+	name='sscanner',
+	version='1.0',
+	description='This simplest sscanner',
 	py_modules=['sscanner'],
-	install_requires=['argparse'],
+	python_requires='>=3.5',
+	install_requires=['argparse', 'setuptools'],
 	entry_points=''' 
 	[console_scripts]
 	sscanner=sscanner:main
