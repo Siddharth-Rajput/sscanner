@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys, re, os, stat, argparse
 
 regex = {"AWS Bucket0": "[a-z0-9.-]+\\.s3\\.amazonaws\\.com",
@@ -109,9 +110,11 @@ def main():
         com = "git clone -q " + folder
         os.system(com)
         folder = folder.split("/").pop().split(".")[0]
-        folderscan(folder, permissions, quiet, "r")
+        print("")
+        print(folderscan(folder, permissions, quiet, "r"))
     else:
-        folderscan(folder, permissions, quiet, "f")
+        print("")
+        print(folderscan(folder, permissions, quiet, "f"))
 
 if __name__ == "__main__":
     main()
