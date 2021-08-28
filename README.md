@@ -27,7 +27,7 @@ This is a folder/repo scanner for secrets and file permissions. Written in pytho
 ```bash
 git clone https://github.com/Siddharth-Rajput/sscanner.git
 cd sscanner
-pip3 install .
+sudo pip3 install .
 ```
 
 ### About
@@ -52,9 +52,9 @@ Here we are using **samplefolder** as placehoder for actual folder name to scan.
 ```bash
 sudo sscanner --help
 sudo sscanner -i sample
-sudo sscanner -i exfolder -q=true
-sudo sscanner -i exfolder -p=700,555
-sudo sscanner -i exfolder -q=false -p=600,666
+sudo sscanner -i exfolder -q true
+sudo sscanner -i exfolder -p 700,555
+sudo sscanner -i exfolder --quiet false --permissions 600,666
 
 sudo sscanner -i https://github.com/Siddharth-Rajput/hacktoberFest.git -p=766
 ```
