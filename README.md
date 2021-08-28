@@ -69,7 +69,7 @@ sudo sscanner -i https://github.com/Siddharth-Rajput/hacktoberFest.git -p=766
 For testing we are using **unittest** and have a test.py for the same. In test.py there are three unit test cases written. To run unittest sun the following command.
 
 ```bash
-sudo python3 -m unittest test.py
+sudo python3 -m unittest
 ```
 
 ### Code Explained
