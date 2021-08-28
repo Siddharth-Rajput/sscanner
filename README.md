@@ -1,4 +1,4 @@
-# SScanner
+<h1 align="center">SScanner</h1>
 
 ## About
 
