@@ -63,3 +63,15 @@ sudo sscanner -i https://github.com/Siddharth-Rajput/hacktoberFest.git -p=766
 
 ![Untitled](https://user-images.githubusercontent.com/41564193/131228102-3c54cec1-03a6-43d2-a2c0-c12c5392b580.png)
 ![Untitled 1](https://user-images.githubusercontent.com/41564193/131228097-034c39b7-eb44-4994-9235-9222cf4738d1.png)
+
+### Testing
+
+For testing we are using **unittest** and have a test.py for the same. In test.py there are three unit test cases written. To run unittest sun the following command.
+
+```bash
+sudo python3 -m unittest test.py
+```
+
+### Code Explained
+
+To get indepth working of the code please see codeExplained.md
