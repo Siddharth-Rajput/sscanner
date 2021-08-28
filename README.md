@@ -2,7 +2,7 @@
 
 ## About
 
-This is a basic folder/repo scanner for secrets and file permissions. Written in python3.
+This is a folder/repo scanner for secrets and file permissions. Written in python3.
 
 ### Things it can do
 
