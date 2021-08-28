@@ -37,10 +37,9 @@ def summary(file_ext,file_fond):
     for files in file_ext:
         ext = files.split(".").pop()
         print("%s = > %s" % (ext, files))
-    #print(*file_ext, sep = "\n")
     print("=============================")
 
-def folderscan(folder, permissions, quite):
+def folderscan(folder, permissions, quite, repo):
     over = False
     permissions = [int(item) for item in permissions]
     permissions.append(777)
@@ -64,19 +63,18 @@ def folderscan(folder, permissions, quite):
                     over = True
                 ###  CONTENT SCANNING
                 if ext in escape_file: continue
-                    with open(fullpath, "r") as G: content = G.read()
-                #content = open(fullpath, "r").read()
-                for i in range(len(regex)):
-                    exp = regex_values[i]
-                    em = re.findall(exp, content)
+                with open(fullpath, "r") as G: content = G.read()
+                for k, v in regex.items():
+                    em = re.findall(v, content)
                     if len(em)!=0:
-                        print ("Found %d %s in => %s" % (len(em), regex_keys[i], fullpath))
+                        print ("\nFound %d %s in => %s" % (len(em), k, fullpath))
                         print (em)
                         print ("=================\n")
                         over = True
-                 over = True
+                G.close()
         if quite == False:
             summary(file_ext,file_fond)
+        if repo == "r": os.system("rm -r %s" % (folder))
     else:
         print ("Folder does not exist")
     return over
@@ -107,10 +105,10 @@ def main():
         com = "git clone " + folder 
         os.system(com)
         folder = folder.split("/").pop().split(".")[0]
-        folderscan(folder, permissions, quite)
+        folderscan(folder, permissions, quite, "r")
         os.system("rm -r %s" % (folder))
     else:
-        folderscan(folder, permissions, quite)
+        folderscan(folder, permissions, quite, "f")
 
 if __name__ == "__main__":
     main()
