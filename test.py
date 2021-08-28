@@ -3,23 +3,27 @@ import os
 import unittest
 from sscanner import folderscan
 
-inputfile = "https://github.com/Siddharth-Rajput/hacktoberFest.git"
-if "git" in inputfile.split("."):
-        #com = "git clone " + folder 
-        os.system("git clone " + inputfile)
-        folder = inputfile.split("/").pop().split(".")[0]
+test=["exfolder",
+    "https://github.com/Siddharth-Rajput/hacktoberFest.git",
+    "exfolder"]
+
+name = []
+for i in range(len(test)):
+    if "git" in test[i].split("."):
+        os.system("git clone -q " + test[i])
+        name.append(test[i].split("/").pop().split(".")[0])
+    else: name.append(test[i])
 
 class TestSum(unittest.TestCase):
-    
-    def test_int1(self):
-        result = folderscan(folder,[],True)
-        self.assertFalse(result)
-    """ def test_int2(self):
-        result = folderscan("exfolder",[],True)
-        self.assertEqual(result, "hell3o")
-    def test_int3(self):
-        result = folderscan("exfolder",[],True)
-        self.assertEqual(result, "hell3o") """
+    def test_1(self):
+        result = folderscan(name[0],[],True,"f")
+        self.assertEqual("Found 0 Permission error, 0 File Extension, 0 Secrets", result)
+    def test_2(self):
+        result = folderscan(name[1],[],True,"r")
+        self.assertEqual("Found 0 Permission error, 0 File Extension, 0 Secrets", result)
+    def test_3(self):
+        result = folderscan(name[2],[],True,"f")
+        self.assertEqual("Found 0 Permission error, 0 File Extension, 0 Secrets", result)
 
 if __name__ == '__main__':
     unittest.main()
