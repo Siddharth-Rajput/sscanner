@@ -96,8 +96,8 @@ def parse_args():
     parser.error = parser_error
     parser._optionals.title = "OPTIONS"
     parser.add_argument('-p', '--permissions', help='Scan the given permissions file only', default="777")
-    parser.add_argument('-q', '--quiet', help='Scanner will run in its default configurations', default=False)
-    parser.add_argument('-i', '--input', help='Specify a folder name or Git repo to scan', required=True)
+    parser.add_argument('-q', '--quiet', help='Scanner will not show Summary in detailed form', default=False)
+    parser.add_argument('-i', '--input', help='Give a folder name or Git repo to scan', required=True)
     return parser.parse_args()
 
 def main():
