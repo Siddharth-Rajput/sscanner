@@ -29,4 +29,4 @@ jobs:
         # stop the build if there are Python syntax errors or undefined names        
     - name: Test with Unittest
       run: |
-        unittest
+        python -m unittest
