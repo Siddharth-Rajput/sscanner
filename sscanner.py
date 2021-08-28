@@ -10,8 +10,7 @@ regex = {"AWS Bucket0": "[a-z0-9.-]+\\.s3\\.amazonaws\\.com",
          "Base 64": "([^A-Za-z0-9+/]|^)(eyJ|YTo|Tzo|PD[89]|aHR0cHM6L|aHR0cDo|rO0)[%a-zA-Z0-9+/]+={0,2}",
          "AWS Keys": "([^A-Z0-9]|^)(AKIA|A3T|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{12,}",
          "Email Address": '\S+@\S+'}
-regex_keys = list(regex.keys())
-regex_values = list(regex.values())
+
 
 needed_ext = ["py","sh","bash","yaml"]
 escape_file = ["pdf","png","jpg","md"]
@@ -24,10 +23,10 @@ def banner():
 ░█▄▄▄█ ▀▀▀ ▀▀▀ ▀─▀▀ ▀▀▀ ──▀── 　 ░█▄▄▄█ ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀ ▀─▀▀
     ''')
 
-def summary(file_ext,file_fond):
-    print("****************************")
-    print("** HERE A SUMMARY OF SCAN **")
-    print("****************************")
+def summary(file_ext,file_fond,secret_fond):
+    print("**************************")
+    print("** HERE SUMMARY OF SCAN **")
+    print("**************************")
     print("%d files found with given permissions\n" % (len(file_fond)))
     for files in file_fond:
         mask = oct(os.stat(files).st_mode)[-3:]
@@ -38,6 +37,11 @@ def summary(file_ext,file_fond):
         ext = files.split(".").pop()
         print("%s = > %s" % (ext, files))
     print("=============================")
+    print("%d secrets found in the files \n" % (len(secret_fond)))
+    for k,v in secret_fond.items():
+        print("{} found in {}".format(k,v))
+    print("=============================")
+
 
 def folderscan(folder, permissions, quite, repo):
     over = False
@@ -45,36 +49,33 @@ def folderscan(folder, permissions, quite, repo):
     permissions.append(777)
     file_fond = []
     file_ext = []
+    secret_fond = {}
     if os.path.exists(folder):
-        print("**************************")
-        print("** Scanning for Secrets **")
-        print("**************************\n")
         for currentpath, folders, files in os.walk(folder):
             for file in files:
                 if ".git" in currentpath.split("/"): continue  ## Ignoring the .git folder
                 fullpath = os.path.join(currentpath, file)
                 ext = fullpath.split(".").pop()
                 mask = oct(os.stat(fullpath).st_mode)[-3:]
-                if int(mask) in permissions: 
+                if int(mask) in permissions:  ## Scanning for permissions
                     file_fond.append(fullpath)
                     over = True
-                if ext in needed_ext:
-                    file_ext.append(fullpath)
+                if ext in needed_ext: 
+                    file_ext.append(fullpath)  ## Scanning for extensions
                     over = True
+                
                 ###  CONTENT SCANNING
                 if ext in escape_file: continue
-                with open(fullpath, "r") as G: content = G.read()
+                with open(fullpath, "r") as G:
+                    content = G.read()
                 for k, v in regex.items():
                     em = re.findall(v, content)
-                    if len(em)!=0:
-                        print ("\nFound %d %s in => %s" % (len(em), k, fullpath))
-                        print (em)
-                        print ("=================\n")
-                        over = True
+                    if len(em)!=0: over = True   ##  Test failed as secrets found in input
+                    for i in range(len(em)): secret_fond[em[i]]=fullpath
                 G.close()
         if quite == False:
-            summary(file_ext,file_fond)
-        if repo == "r": os.system("rm -r %s" % (folder))
+            summary(file_ext,file_fond,secret_fond)
+        if repo == "r": os.system("sudo rm -r %s" % (folder))
     else:
         print ("Folder does not exist")
     return over
@@ -90,7 +91,7 @@ def parse_args():
     parser = argparse.ArgumentParser(epilog='\tExample: \r\npython3 ' + sys.argv[0] + " -i FolderLocation")
     parser.error = parser_error
     parser._optionals.title = "OPTIONS"
-    parser.add_argument('-p', '--permissions', help='Scan the given permissions file only', default=777)
+    parser.add_argument('-p', '--permissions', help='Scan the given permissions file only', default="777")
     parser.add_argument('-q', '--quite', help='Scanner will run in its default configurations', default=False)
     parser.add_argument('-i', '--input', help='Specify a folder name or Git repo to scan', required=True)
     return parser.parse_args()
@@ -102,11 +103,10 @@ def main():
     folder = args.input
     banner()
     if "git" in folder.split("."):
-        com = "git clone " + folder 
+        com = "git clone -q " + folder
         os.system(com)
         folder = folder.split("/").pop().split(".")[0]
         folderscan(folder, permissions, quite, "r")
-        os.system("rm -r %s" % (folder))
     else:
         folderscan(folder, permissions, quite, "f")
 
