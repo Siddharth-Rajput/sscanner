@@ -3,7 +3,7 @@ import os
 import unittest
 from sscanner import folderscan
 
-test=["exfolder",
+test=["samplefolder",
     "https://github.com/Siddharth-Rajput/hacktoberFest.git",
     "exfolder"]
 
