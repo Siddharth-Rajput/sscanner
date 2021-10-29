@@ -24,6 +24,9 @@ class TestSum(unittest.TestCase):
     def test_3(self):
         result = folderscan(name[2],[],True,"f")
         self.assertEqual("Found 0 Permission error, 0 File Extension, 0 Secrets", result)
+    def test_4(self):
+        result = folderscan(name[2],[],True,"f")
+        self.assertEqual("Found 0 Permission error, 0 File Extension, 0 Secrets", result)
 
 if __name__ == '__main__':
     unittest.main()
