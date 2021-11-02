@@ -6,7 +6,7 @@ from sscanner import folderscan
 test=["samplefolder",
     "https://github.com/Siddharth-Rajput/hacktoberFest.git",
     "exfolder"]
-
+# AWSKEY = AKIAI7VM24AYPFD3VHMA
 name = []
 for i in range(len(test)):
     if "git" in test[i].split("."):
